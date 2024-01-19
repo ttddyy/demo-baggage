@@ -13,12 +13,14 @@ java {
 
 repositories {
 	mavenCentral()
+	mavenLocal()
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+	implementation 'io.micrometer:micrometer-tracing-bridge-brave:1.2.2'
+//	implementation 'io.micrometer:micrometer-tracing-bridge-brave:1.3.0-SNAPSHOT'
 	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
