@@ -47,7 +47,8 @@ public class HelloController {
         System.out.println("CONTROLLER: HEADERS=" + headers);
         System.out.println("CONTROLLER: ob=" + registry.getCurrentObservation());
         System.out.println("CONTROLLER: span=" + tracer.currentSpan());
-        System.out.println("CONTROLLER: baggage=" + tracer.getBaggage("foo").get());
+        System.out.println("CONTROLLER: baggage root-trace-id=" + tracer.getBaggage("root-trace-id").get());
+        System.out.println("CONTROLLER: baggage foo=" + tracer.getBaggage("foo").get());
         return "Hello";
     }
 

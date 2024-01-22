@@ -33,7 +33,7 @@ public class DemoBaggageApplication {
         SpringApplication.run(DemoBaggageApplication.class, "--debug");
     }
 
-    @Bean
+    //    @Bean
     CommandLineRunner runner2(Tracer tracer) {
         return (args) -> {
             Span span = tracer.nextSpan().name("parent").start();
@@ -46,7 +46,7 @@ public class DemoBaggageApplication {
         };
     }
 
-    //    @Bean
+    @Bean
     CommandLineRunner runner(RestTemplateBuilder builder, ObservationRegistry
             observationRegistry, Tracer tracer) {
         RestTemplate restTemplate = builder.build();
@@ -68,15 +68,22 @@ public class DemoBaggageApplication {
 //            }
             try (Tracer.SpanInScope ws = tracer.withSpan(span.start())) {
                 System.out.println("AAA current-span1=" + tracer.currentSpan());
-                try (BaggageInScope baggageInScope = tracer.createBaggageInScope(span.context(), "foo", "ABC333")) {
+                try (BaggageInScope baggageInScope = tracer.createBaggageInScope(span.context(), "root-trace-id", "ABC333")) {
                     System.out.println("AAA baggageInScope=" + baggageInScope.get());
 //                try (BaggageInScope baggageForExplicitSpan = tracer.createBaggageInScope(span.context(), "abc", "ABC333")) {
 //                Observation observation = Observation.createNotStarted("foo", observationRegistry);
 //                observation.lowCardinalityKeyValue("abc", "ABC");
 //                observation.observe(() -> {
-                    System.out.println("AAA current-span2=" + tracer.currentSpan());
-                    String result = restTemplate.getForObject("http://localhost:8080/hello", String.class);
-                    System.out.println("AAA received " + result);
+                    try (BaggageInScope bis2 = tracer.createBaggageInScope(span.context(), "foo", "FOO")) {
+                        System.out.println("AAA baggage(root-race-id)=" + baggageInScope.get());
+                        System.out.println("AAA baggage(foo)=" + bis2.get());
+
+                        System.out.println("AAA current-span2=" + tracer.currentSpan());
+
+                        String result = restTemplate.getForObject("http://localhost:8080/hello", String.class);
+                        System.out.println("AAA received " + result);
+
+                    }
 //                    System.out.println("AAA received " + observation);
 //                });
                 }
